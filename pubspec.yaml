@@ -63,6 +63,16 @@ flutter:
   assets:
     - assets/background.jpg
     - assets/logo.png
+    - assets/common.jpeg
+    - assets/facebook.png
+    - assets/twitter.png
+    - assets/phone.png
+    - assets/google.png
+    - assets/back.jpg
+    - assets/11.jpg
+    - assets/33.jpg
+    - assets/99.jfif
+    - assets/bakk.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
