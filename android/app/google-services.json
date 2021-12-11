@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "932382040035",
+    "project_id": "marx-faa39",
+    "storage_bucket": "marx-faa39.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:932382040035:android:87dfabcee320c44e600ad6",
+        "android_client_info": {
+          "package_name": "com.marx"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "932382040035-68uid5pl5f0bio58die22om3hds422d7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.marx",
+            "certificate_hash": "492e622fd822a5d4df7837aa662f27bcf86a05c1"
+          }
+        },
+        {
+          "client_id": "932382040035-qsk6u9amvhdhhnqkrd50ru605n6h2q7e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXcAkJz47UlrGI5u2u75EaGAHAUSCRrxA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "932382040035-qsk6u9amvhdhhnqkrd50ru605n6h2q7e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
