@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'facebook auth.dart';
 import 'google auth.dart';
 import 'home.dart';
 import 'main.dart';
@@ -6,6 +7,9 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'package:international_phone_input/international_phone_input.dart';
+import 'otp.dart';
+import 'phone.dart';
 import 'twitter auth.dart';
 
 //
@@ -24,7 +28,17 @@ class _LoginState extends State<Login> {
   String password = '';
 
   @override
+  TextEditingController _emailTEC = TextEditingController();
+  //var _email;
+  var phone;
+  void onPhoneNumberChange(String number, String internationalizedPhoneNumber, String isoCode) {
+    setState(() {
+      phone =internationalizedPhoneNumber;
+      print(phone);
 
+
+    });
+  }
   Widget build(BuildContext context) {
     var query = MediaQuery.of(context);
     var height = query.size.height;
@@ -103,9 +117,143 @@ class _LoginState extends State<Login> {
                   width: MediaQuery.of(context).size.width / 9,
                   height: MediaQuery.of(context).size.height / 12,
                   // color: Colors.blueGrey,
-                  child: Image.asset(
-                    'assets/phone.png',
-                  ),
+                    child: IconButton(
+                      icon: Image.asset('assets/phone.png'),
+                      iconSize: 50,
+
+                      onPressed: () {
+
+
+                        // await signInWithGoogle();
+
+                        // setState(() {});
+
+                      //   Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(builder: (context) => Phone()),
+                      //   );
+
+                        showDialog(context: context,
+                          builder: (BuildContext context){
+                            return SimpleDialog(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+
+                              ),
+
+                              title: Row(
+                                  children:[
+                                    Image.asset('assets/phone.png',
+                                      width: 40, height: 40, fit: BoxFit.contain, color: Colors.black,),
+                                    Text('   Sign in with phone ',
+                                      style: TextStyle(
+
+                                          color: Colors.black,
+                                          fontSize: 23,
+                                          fontFamily: 'bold'
+                                      ),
+                                    )
+                                  ]
+                              ),
+
+
+                            backgroundColor: Colors.teal,
+                              children: [
+
+                                Container(
+
+                                  margin:EdgeInsets.fromLTRB(10, 20, 0, 0),
+
+                                  child : InternationalPhoneInput(
+
+                                    decoration: InputDecoration.collapsed(
+                                      hintText: 'Enter your number',
+                                      hintStyle: TextStyle(
+
+                                        color: Colors.black26,
+                                        fontSize: 18,
+                                      ),
+
+                                      // fillColor: Colors.brown,
+                                    ),
+                                    onPhoneNumberChange: onPhoneNumberChange,
+                                    initialPhoneNumber: phone,
+                                    initialSelection: 'PAK',
+                                    enabledCountries: ['+92', '+1', '+91' , '90', '99', '97', '60', '70', '80'],
+                                    showCountryCodes: true,
+
+                                  ),
+                                ),
+
+                                SizedBox(
+                                  height: height/30,
+                                ),
+
+                                Container(
+                                    // width: MediaQuery.of(context).size.width/12,
+                                    height: MediaQuery.of(context).size.height/25,
+                                    margin: const EdgeInsets.only(left: 70.0, right: 70),
+                                    child: ElevatedButton(
+                                      onPressed: ()
+
+                                      {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context) => Search(  title: phone,)),
+                                        );
+
+                                      },
+
+
+                                      style: ButtonStyle(
+
+                                        backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                              (Set<MaterialState> states) {
+                                            if (states.contains(MaterialState.pressed))
+                                              return Colors.white;
+                                            return Colors.indigoAccent;
+                                          },
+                                        ),
+                                        shape:
+                                        MaterialStateProperty.all<RoundedRectangleBorder>(
+                                            RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(30.0),
+                                                side: BorderSide(
+                                                    color: Colors.white)
+                                            )
+                                        ),
+
+                                      ),
+
+                                      child: Text(
+                                        '\tSend ',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'OpenSans',
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    )
+                                )
+
+
+
+                              ],
+
+
+
+
+
+
+
+                        );
+
+                                }
+                        );
+
+                      },
+                    )
                 ),
                 SizedBox(
                   width: width / 12,
@@ -141,9 +289,23 @@ class _LoginState extends State<Login> {
                   width: MediaQuery.of(context).size.width / 5,
                   height: MediaQuery.of(context).size.height / 10,
                   // color: Colors.blueGrey,
-                  child: Image.asset(
-                    'assets/facebook.png',
-                  ),
+                    child: IconButton(
+                      icon: Image.asset('assets/facebook.png'),
+                      iconSize: 50,
+
+                      onPressed: () async{
+
+
+                        // await signInWithGoogle();
+                        //
+                        // setState(() {});
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginWithFacebook()),
+                        );
+                      },
+                    )
                 ),
               ],
           ),

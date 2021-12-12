@@ -43,6 +43,10 @@ dependencies:
   firebase_auth: ^3.3.3
   google_sign_in: ^5.2.1
   firebase_core: ^1.10.5
+  flutter_facebook_auth: ^3.5.7
+  http: ^0.13.4
+  international_phone_input: ^1.0.4
+  pinput: ^1.2.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
