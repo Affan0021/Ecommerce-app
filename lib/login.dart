@@ -7,6 +7,7 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'package:pinput/pin_put/pin_put.dart';
 import 'package:international_phone_input/international_phone_input.dart';
 import 'otp.dart';
 import 'phone.dart';
@@ -14,7 +15,7 @@ import 'twitter auth.dart';
 
 //
 class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+  // const Login({Key? key}) : super(key: key);
 
   @override
   _LoginState createState() => _LoginState();
@@ -39,12 +40,25 @@ class _LoginState extends State<Login> {
 
     });
   }
+  var _verificationCode;
+  final _pinPutController = TextEditingController();
+  final _pinPutFocusNode = FocusNode();
+  final GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
+  final BoxDecoration pinPutDecoration = BoxDecoration(
+    color: const Color.fromRGBO(43, 46, 66, 1),
+    borderRadius: BorderRadius.circular(10.0),
+    border: Border.all(
+      color: const Color.fromRGBO(126, 203, 224, 1),
+    ),
+  );
+
   Widget build(BuildContext context) {
     var query = MediaQuery.of(context);
     var height = query.size.height;
     var width = query.size.width;
 
     return Scaffold(
+        key: _scaffoldkey,
         body: Form(
             key: formKey,
             child: SingleChildScrollView(
@@ -114,12 +128,12 @@ class _LoginState extends State<Login> {
                   width: width / 12,
                 ),
                 Container(
-                  width: MediaQuery.of(context).size.width / 9,
-                  height: MediaQuery.of(context).size.height / 12,
+                  width: MediaQuery.of(context).size.width / 7.5,
+                  height: MediaQuery.of(context).size.height / 11,
                   // color: Colors.blueGrey,
                     child: IconButton(
                       icon: Image.asset('assets/phone.png'),
-                      iconSize: 50,
+                      // iconSize: 50,
 
                       onPressed: () {
 
@@ -196,15 +210,13 @@ class _LoginState extends State<Login> {
                                     child: ElevatedButton(
                                       onPressed: ()
 
-                                      {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(builder: (context) => Search(  title: phone,)),
-                                        );
+                            {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Search(  title: phone,)),
+                            );
 
-                                      },
-
-
+                                                 },
                                       style: ButtonStyle(
 
                                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
@@ -494,7 +506,12 @@ class _LoginState extends State<Login> {
       },
     ),
   );
+
+
 }
+
+
+
 
 
 
@@ -548,20 +565,20 @@ class ButtonWidget extends StatelessWidget {
 }
 
   Future<UserCredential> signInWithGoogle() async {
-  // Trigger the authentication flow
-  final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-  // Obtain the auth details from the request
-  final GoogleSignInAuthentication googleAuth = await googleUser!.authentication;
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication googleAuth = await googleUser!
+        .authentication;
 
-  // Create a new credential
-  final credential = GoogleAuthProvider.credential(
-  accessToken: googleAuth.accessToken,
-  idToken: googleAuth.idToken,
-  );
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
 
-
-  // Once signed in, return the UserCredential
-  return await FirebaseAuth.instance.signInWithCredential(credential);
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }

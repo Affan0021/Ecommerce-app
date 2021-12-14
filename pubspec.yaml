@@ -83,6 +83,7 @@ flutter:
     - assets/33.jpg
     - assets/99.jfif
     - assets/bakk.png
+    - assets/get.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

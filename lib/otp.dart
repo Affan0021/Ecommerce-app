@@ -1,7 +1,6 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-// import 'package:login_full/welcome_Login.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 
 import 'home.dart';
@@ -48,18 +47,16 @@ class _SearchState extends State<Search> {
                 children: [
 
                   Container(
-                    margin:  const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     width: MediaQuery.of(context).size.width,
-                    height:MediaQuery.of(context).size.height,
-                    // decoration:   BoxDecoration(
-                    //   image:  const DecorationImage(
-                    //     fit: BoxFit.cover,
-                    //     image: AssetImage('user/log.jpg'),
-                    //
-                    //   ),
-                    //
-                    // ),
+                    height: MediaQuery.of(context).size.height,
+                    // color: Colors.white,
 
+                    child: DecoratedBox(
+                      decoration: new BoxDecoration(
+                        image: new DecorationImage(
+                            image: new AssetImage('assets/back.jpg'), fit: BoxFit.fill),
+                      ),
+                    ),
                   ),
 
 
@@ -68,21 +65,34 @@ class _SearchState extends State<Search> {
                     children: [
 
                       SizedBox(
-                        height: height/5,
+                        height: height/8,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width/1.5,
+                        height: MediaQuery.of(context).size.height/4,
+                        // color: Colors.white,
+
+                        child: DecoratedBox(
+                          decoration: new BoxDecoration(
+                            image: new DecorationImage(
+                                image: new AssetImage('assets/get.png'), fit: BoxFit.fill),
+                          ),
+                        ),
                       ),
 
                       Container(
-                        margin:  const EdgeInsets.fromLTRB(0, 0, 130,0),
-                        width: MediaQuery.of(context).size.width/2,
+                        margin:  const EdgeInsets.fromLTRB(0, 0, 0,0),
+                        width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.height/10,
                         color: Colors.transparent,
+                        alignment: Alignment.center,
                         child: const Text(
-                          'Enter\nPincode',
+                          'Phone Number Verification',
                           style: TextStyle(
 
-                            color: Colors.white,
+                            color: Colors.black,
                             fontFamily: 'OpenSans',
-                            fontSize: 30.0,
+                            fontSize: 25.0,
                             fontWeight: FontWeight.bold,
 
 
@@ -94,10 +104,56 @@ class _SearchState extends State<Search> {
 
                       ),
 
+                      Row(
+                        children: [
+
+                          // SizedBox(
+                          //   width: width/10,
+                          // ),
+                        Text(
+                              '     \t\t   Enter the code sent to',
+                              style: TextStyle(
+
+                                color: Colors.black,
+                                fontFamily: 'OpenSans',
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.bold,
+
+
+                              ),
+
+
+                            ),
+
+
+                           Text(
+                              '  ${widget.title}',
+                              style: TextStyle(
+
+                                color: Colors.black,
+                                fontFamily: 'OpenSans',
+                                fontSize: 17.0,
+                                fontWeight: FontWeight.bold,
+
+
+                              ),
+
+
+                            ),
+
+
+
+
+                        ],
+                      ),
+
+
+
+
 
 
                       Container(
-                        padding: const EdgeInsets.fromLTRB(10, 100, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(10, 60, 0, 0),
 
                         child: PinPut(
                           fieldsCount: 6,
@@ -118,10 +174,10 @@ class _SearchState extends State<Search> {
                           ),
                           selectedFieldDecoration: pinPutDecoration.copyWith(color: Colors.tealAccent),
                           followingFieldDecoration: pinPutDecoration.copyWith(
-                            borderRadius: BorderRadius.circular(10.0),
+                            borderRadius: BorderRadius.circular(5.0),
                             color: Colors.white,
                             border: Border.all(
-                              color: Colors.black,
+                              color: Colors.green,
                               width: 3,
                             ),
                           ),
@@ -153,6 +209,58 @@ class _SearchState extends State<Search> {
 
 
                       ),
+
+
+                      SizedBox(
+                        height: height/8,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width/1.5,
+                          height: MediaQuery.of(context).size.height/18,
+                          // margin: const EdgeInsets.only(left: 150.0, right: 150),
+                          child: ElevatedButton(
+                            onPressed: ()
+
+                            {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(builder: (context) => Search(  title: phone,)),
+                              // );
+
+                            },
+                            style: ButtonStyle(
+
+                              backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                                    (Set<MaterialState> states) {
+                                  if (states.contains(MaterialState.pressed))
+                                    return Colors.white;
+                                  return Colors.green;
+                                },
+                              ),
+                              shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(7.0),
+                                      side: BorderSide(
+                                          color: Colors.white)
+                                  )
+                              ),
+
+                            ),
+
+                            child: Text(
+                              '\tVerify ',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'OpenSans',
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          )
+                      )
+
+
 
 
                     ],
