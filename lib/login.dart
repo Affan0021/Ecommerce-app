@@ -7,10 +7,13 @@ import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:pinput/pin_put/pin_put.dart';
 import 'package:international_phone_input/international_phone_input.dart';
 import 'otp.dart';
 import 'phone.dart';
+import 'signup.dart';
 import 'twitter auth.dart';
 
 //
@@ -27,7 +30,7 @@ class _LoginState extends State<Login> {
   String username = '';
   String email = '';
   String password = '';
-
+  var count;
   @override
   TextEditingController _emailTEC = TextEditingController();
   //var _email;
@@ -51,6 +54,42 @@ class _LoginState extends State<Login> {
       color: const Color.fromRGBO(126, 203, 224, 1),
     ),
   );
+  String userEmail = "hell";
+
+
+  var Email , Password;
+
+
+  getEmail(email)
+  {
+    this.Email = email;
+  }
+  getPassword(age)
+  {
+    this.Password = age;
+  }
+
+  createData()
+  {
+    DocumentReference documentReference =
+    FirebaseFirestore.instance.collection("My").doc(Email);
+
+    Map<String,dynamic> students=
+    {
+      "UserEmail": Email,
+      // "UserPassword": Password,
+      // "studentPhone": studentPhone,
+
+
+
+    };
+    documentReference.set(students).whenComplete(() {
+      print("user created");
+    });
+
+  }
+
+
 
   Widget build(BuildContext context) {
     var query = MediaQuery.of(context);
@@ -62,7 +101,9 @@ class _LoginState extends State<Login> {
         body: Form(
             key: formKey,
             child: SingleChildScrollView(
-              child: Stack(children: <Widget>[
+              child: Stack(
+
+                  children: <Widget>[
 
 
       // To have bacground image
@@ -79,7 +120,10 @@ class _LoginState extends State<Login> {
           ),
         ),
        ),
-      Column(
+          Align(
+              alignment: Alignment.center,
+
+              child: Column(
         children: [
           //
           SizedBox(
@@ -307,15 +351,14 @@ class _LoginState extends State<Login> {
 
                       onPressed: () async{
 
+                        await signInWithFacebook();
 
-                        // await signInWithGoogle();
-                        //
-                        // setState(() {});
+                        setState(() {});
 
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => LoginWithFacebook()),
-                        );
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(builder: (context) => LoginWithFacebook()),
+                        // );
                       },
                     )
                 ),
@@ -349,10 +392,11 @@ class _LoginState extends State<Login> {
                 Container(
                     child: TextButton(
                   onPressed: () {
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => Signup()),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Signup()),
+                    );
+
                   },
                   child: Text(
                     '\tSign up',
@@ -368,146 +412,194 @@ class _LoginState extends State<Login> {
           ),
 
         ],
-      )
+      ))
     ]),
             )));
 
 
   }
 
-  Widget buildEmail() =>  TextFormField(
-      style: TextStyle(
-        color: Colors.black,
-        fontSize: 20,
-        fontFamily: 'OpenSans',
-      ),
-    decoration: InputDecoration(
-      contentPadding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-      border: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.blue,
-          // width: 3,
+  Widget buildEmail() => Container(
+
+      width: MediaQuery.of(context).size.width/1.2,
+
+      child:TextFormField(
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 20,
+          fontFamily: 'OpenSans',
         ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      // contentPadding: const EdgeInsets.only(top: 11.0),
-      prefixIcon: Icon(
-        Icons.email,
-        color: Colors.blue,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.blue,
-          width: 3,
+        decoration: InputDecoration(
+          contentPadding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.blue,
+              // width: 3,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          // contentPadding: const EdgeInsets.only(top: 11.0),
+          prefixIcon: Icon(
+            Icons.email,
+            color: Colors.blue,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.blue,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          labelText: 'Email',
+          hintStyle: TextStyle(
+            color: Colors.blueGrey, // <-- Change this
+            fontSize: 17,
+            fontWeight: FontWeight.w400,
+            fontStyle: FontStyle.normal,
+          ),
+
+
         ),
-        borderRadius: BorderRadius.circular(20),
+        // onChanged: (String email)
+        // {
+        //   getEmail(email);
+        //   print('email is send');
+        //   print(email);
+        // },
+
+        validator: (value) {
+          final pattern = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
+          final regExp = RegExp(pattern);
+
+          if (value!.isEmpty) {
+            return 'Enter an email';
+          } else if (!regExp.hasMatch(value)) {
+            return 'Enter a valid email';
+          } else {
+            // count = 1;
+            return null;
+          }
+        },
+
+        keyboardType: TextInputType.emailAddress,
+        onSaved: (value) => setState(() => email = value!),
+
+
       ),
-      labelText: 'Email',
-      hintStyle: TextStyle(
-        color: Colors.blueGrey, // <-- Change this
-        fontSize: 17,
-        fontWeight: FontWeight.w400,
-        fontStyle: FontStyle.normal,
-      ),
 
-
-    ),
-
-    validator: (value) {
-      final pattern = r'(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)';
-      final regExp = RegExp(pattern);
-
-      if (value!.isEmpty) {
-        return 'Enter an email';
-      } else if (!regExp.hasMatch(value)) {
-        return 'Enter a valid email';
-      } else {
-        return null;
-      }
-    },
-    keyboardType: TextInputType.emailAddress,
-    onSaved: (value) => setState(() => email = value!),
-
-
-
+      // if(){
+      //
+      //   }
   );
 
-  Widget buildPassword() => TextFormField(
-    // cursorWidth: 20,
+  Widget buildPassword() => Container(
 
-    // maxLines:  5,
+      width: MediaQuery.of(context).size.width/1.2,
 
-    decoration: InputDecoration(
-      contentPadding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
-      
-      border: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.blue,
-          // width: 3,
+      child:TextFormField(
+        // cursorWidth: 20,
+
+        // maxLines:  5,
+
+        decoration: InputDecoration(
+          contentPadding: new EdgeInsets.symmetric(vertical: 5.0, horizontal: 5.0),
+
+          border: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.blue,
+              // width: 3,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          // contentPadding: const EdgeInsets.only(top: 11.0),
+          prefixIcon: Icon(
+            Icons.lock,
+            color: Colors.blue,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.blue,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          labelText: 'Password',
+          hintStyle: TextStyle(
+            color: Colors.blueGrey,
+            fontSize: 17,
+            fontWeight: FontWeight.w400,
+            fontStyle: FontStyle.normal,
+          ),
+
+
         ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      // contentPadding: const EdgeInsets.only(top: 11.0),
-      prefixIcon: Icon(
-        Icons.lock,
-        color: Colors.blue,
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(
-          color: Colors.blue,
-          width: 3,
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      labelText: 'Password',
-      hintStyle: TextStyle(
-        color: Colors.blueGrey, // <-- Change this
-        fontSize: 17,
-        fontWeight: FontWeight.w400,
-        fontStyle: FontStyle.normal,
-      ),
 
-
-    ),
-
-    validator: (value) {
-      if (value!.length < 7) {
-        return 'Password must be at least 7 characters long';
-      } else {
-        return null;
-      }
-    },
-    onSaved: (value) => setState(() => password = value!),
-    keyboardType: TextInputType.visiblePassword,
-    obscureText: true,
-  );
+        validator: (value) {
+          if (value!.length < 7) {
+            return 'Password must be at least 7 characters long';
+          } else {
+            return null;
+          }
+        },
+        onSaved: (value) => setState(() => password = value!),
+        keyboardType: TextInputType.visiblePassword,
+        obscureText: true,
+      ));
 
   Widget buildSubmit() => Builder(
+
+
     builder: (context) => ButtonWidget(
       text: 'Submxxit',
+
       onClicked: () {
         final isValid = formKey.currentState!.validate();
          FocusScope.of(context).unfocus();
 
+
+
         if (isValid) {
           formKey.currentState!.save();
 
-          final message =
-              'Username: $username\nPassword: $password\nEmail: $email';
-          final snackBar = SnackBar(
-            content: Text(
-              message,
-              style: TextStyle(fontSize: 20),
-            ),
-            backgroundColor: Colors.green,
-          );
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          // final message =
+          //     'Username: $username\nPassword: $password\nEmail: $email';
+          // final snackBar = SnackBar(
+          //   content: Text(
+          //     message,
+          //     style: TextStyle(fontSize: 20),
+          //   ),
+          //   backgroundColor: Colors.green,
+          // );
+          // ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+          // createData();
+
+
         }
       },
     ),
   );
 
 
+  Future<UserCredential> signInWithFacebook() async {
+    // Trigger the sign-in flow
+    final LoginResult loginResult = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile', 'user_birthday']
+    );
+
+    // Create a credential from the access token
+    final OAuthCredential facebookAuthCredential = FacebookAuthProvider.credential(loginResult.accessToken!.token);
+
+    final userData = await FacebookAuth.instance.getUserData();
+
+    userEmail = userData['email'];
+    print(userEmail);
+
+    // Once signed in, return the UserCredential
+    return FirebaseAuth.instance.signInWithCredential(facebookAuthCredential);
+  }
+
+ // paste
 }
 
 
@@ -532,8 +624,8 @@ class ButtonWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Container(
 
-      width: MediaQuery.of(context).size.width / 1.3,
-      height: MediaQuery.of(context).size.height / 15,
+      width: MediaQuery.of(context).size.width / 2.2,
+      height: MediaQuery.of(context).size.height / 17,
 
       child:ElevatedButton(
     onPressed: onClicked,
@@ -562,6 +654,8 @@ class ButtonWidget extends StatelessWidget {
     ),
      )
   );
+
+
 }
 
   Future<UserCredential> signInWithGoogle() async {
@@ -582,3 +676,4 @@ class ButtonWidget extends StatelessWidget {
     // Once signed in, return the UserCredential
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
+
