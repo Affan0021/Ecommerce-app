@@ -6,7 +6,7 @@ import 'main.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:pinput/pin_put/pin_put.dart';
@@ -90,6 +90,8 @@ class _LoginState extends State<Login> {
   }
 
 
+  late String _email, _password;
+  final auth = FirebaseAuth.instance;
 
   Widget build(BuildContext context) {
     var query = MediaQuery.of(context);
@@ -148,7 +150,7 @@ class _LoginState extends State<Login> {
           const SizedBox(height: 32),
           buildPassword(),
           const SizedBox(height: 32),
-          buildSubmit(),
+          buildsignauth(),
 
 
           SizedBox(
@@ -460,6 +462,12 @@ class _LoginState extends State<Login> {
 
 
         ),
+        onChanged: (value) {
+          setState(() {
+            _email = value.trim();
+          });
+        },
+
         // onChanged: (String email)
         // {
         //   getEmail(email);
@@ -533,7 +541,11 @@ class _LoginState extends State<Login> {
 
 
         ),
-
+        onChanged: (value) {
+          setState(() {
+            _password = value.trim();
+          });
+        },
         validator: (value) {
           if (value!.length < 7) {
             return 'Password must be at least 7 characters long';
@@ -546,39 +558,82 @@ class _LoginState extends State<Login> {
         obscureText: true,
       ));
 
-  Widget buildSubmit() => Builder(
+  Widget buildsignauth() =>  Container(
+
+      width: MediaQuery.of(context).size.width / 2.2,
+      height: MediaQuery.of(context).size.height / 17,
+
+      child:ElevatedButton(
+        // onPressed: onClicked,
+          onPressed: () {
+            final isValid = formKey.currentState!.validate();
+                   FocusScope.of(context).unfocus();
 
 
-    builder: (context) => ButtonWidget(
-      text: 'Submxxit',
 
-      onClicked: () {
-        final isValid = formKey.currentState!.validate();
-         FocusScope.of(context).unfocus();
+                  if (isValid) {
+                    formKey.currentState!.save();
 
+                  //  buildsignauth();
 
+                  };
+            auth.signInWithEmailAndPassword(email: _email, password: _password).then((_){
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+            });
 
-        if (isValid) {
-          formKey.currentState!.save();
-
-          // final message =
-          //     'Username: $username\nPassword: $password\nEmail: $email';
-          // final snackBar = SnackBar(
-          //   content: Text(
-          //     message,
-          //     style: TextStyle(fontSize: 20),
-          //   ),
-          //   backgroundColor: Colors.green,
-          // );
-          // ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-          // createData();
+          },
 
 
-        }
-      },
-    ),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                (Set<MaterialState> states) {
+              if (states.contains(MaterialState.pressed))
+                return Colors.red;
+              return Colors.blue;
+            },
+          ),
+          shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30.0),
+              )),
+        ),
+        child: Text(
+          '\tSign  ',
+          style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'OpenSans',
+            fontSize: 25.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      )
   );
+
+
+
+  // Widget buildSubmit() => Builder(
+  //
+  //
+  //   builder: (context) => ButtonWidget(
+  //     // text: 'Submxxit',
+  //
+  //     onClicked: () {
+  //       final isValid = formKey.currentState!.validate();
+  //        FocusScope.of(context).unfocus();
+  //
+  //
+  //
+  //       if (isValid) {
+  //         formKey.currentState!.save();
+  //
+  //         buildsignauth();
+  //
+  //       }
+  //     },
+  //   ),
+  //
+  //
+  // );
 
 
   Future<UserCredential> signInWithFacebook() async {
@@ -607,56 +662,52 @@ class _LoginState extends State<Login> {
 
 
 
-
-
-
-
-class ButtonWidget extends StatelessWidget {
-  final String text;
-  final VoidCallback onClicked;
-
-  const ButtonWidget({
-    Key? key,
-    required this.text,
-    required this.onClicked,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) => Container(
-
-      width: MediaQuery.of(context).size.width / 2.2,
-      height: MediaQuery.of(context).size.height / 17,
-
-      child:ElevatedButton(
-    onPressed: onClicked,
-
-    style: ButtonStyle(
-      backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            (Set<MaterialState> states) {
-          if (states.contains(MaterialState.pressed))
-            return Colors.red;
-          return Colors.blue;
-        },
-      ),
-      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.0),
-           )),
-    ),
-    child: Text(
-      '\tSign in ',
-      style: TextStyle(
-        color: Colors.white,
-        fontFamily: 'OpenSans',
-        fontSize: 25.0,
-        fontWeight: FontWeight.bold,
-      ),
-    ),
-     )
-  );
-
-
-}
+// class ButtonWidget extends StatelessWidget {
+//   // final String text;
+//   final VoidCallback onClicked;
+//
+//   const ButtonWidget({
+//     Key? key,
+//     // required this.text,
+//     required this.onClicked,
+//   }) : super(key: key);
+//
+//   @override
+//   Widget build(BuildContext context) => Container(
+//
+//       width: MediaQuery.of(context).size.width / 2.2,
+//       height: MediaQuery.of(context).size.height / 17,
+//
+//       child:ElevatedButton(
+//      onPressed: onClicked,
+//
+//     style: ButtonStyle(
+//       backgroundColor: MaterialStateProperty.resolveWith<Color>(
+//             (Set<MaterialState> states) {
+//           if (states.contains(MaterialState.pressed))
+//             return Colors.red;
+//           return Colors.blue;
+//         },
+//       ),
+//       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+//           RoundedRectangleBorder(
+//             borderRadius: BorderRadius.circular(30.0),
+//            )),
+//     ),
+//     child: Text(
+//       '\tSign in ',
+//       style: TextStyle(
+//         color: Colors.white,
+//         fontFamily: 'OpenSans',
+//         fontSize: 25.0,
+//         fontWeight: FontWeight.bold,
+//       ),
+//     ),
+//      )
+//   );
+//
+//
+// }
 
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
